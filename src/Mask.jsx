@@ -24,24 +24,24 @@ const buttonStyle = {
 
 const commonBarStyle = {
   position: 'absolute',
-  backgroundColor: 'rgba(153, 153, 153, 0.35)',
-  width: 4,
-  borderRadius: 2,
-  transition: 'all 0.3s cubic-bezier(0, 0, 0.1, 1)',
+  width: 0,
+  height: 0,
+  borderStyle: 'solid',
+  transition: 'all 0.4s cubic-bezier(0, 0, 0.1, 1)',
 };
 
 const startButton = {
   leftBar: {
-    left: 28,
+    left: 21,
     top: 15,
-    height: 20,
-    transform: 'rotate(-45deg)',
+    borderWidth: '15px 0 0 25px',
+    borderColor: 'transparent transparent transparent #999',
   },
   rightBar: {
-    left: 28,
-    top: 28,
-    height: 23,
-    transform: 'rotate(45deg)'
+    left: 21,
+    top: 30,
+    borderWidth: '15px 25px 0 0',
+    borderColor: '#999 transparent transparent transparent',
   },
 };
 
