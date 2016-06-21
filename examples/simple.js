@@ -19708,7 +19708,7 @@ webpackJsonp([0,1],[
 	
 	var _Mask2 = _interopRequireDefault(_Mask);
 	
-	var _Source = __webpack_require__(183);
+	var _Source = __webpack_require__(178);
 	
 	var _Source2 = _interopRequireDefault(_Source);
 	
@@ -19808,9 +19808,13 @@ webpackJsonp([0,1],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _IconSVGAnim = __webpack_require__(163);
+	var _rcTweenOne = __webpack_require__(163);
 	
-	var _IconSVGAnim2 = _interopRequireDefault(_IconSVGAnim);
+	var _rcTweenOne2 = _interopRequireDefault(_rcTweenOne);
+	
+	var _SvgMorphPlugin = __webpack_require__(176);
+	
+	var _SvgMorphPlugin2 = _interopRequireDefault(_SvgMorphPlugin);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -19822,6 +19826,7 @@ webpackJsonp([0,1],[
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
 	
+	_rcTweenOne2.default.plugins.push(_SvgMorphPlugin2.default);
 	var maskStyle = {
 	  position: 'absolute',
 	  top: 0,
@@ -19850,15 +19855,16 @@ webpackJsonp([0,1],[
 	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 	
 	    _this.state = {
-	      visible: props.defaultVisible
+	      visible: props.defaultVisible,
+	      animation: []
 	    };
-	
+	    _this.childrenToRender = _this.getIconChildren();
 	    _this.handleClick = _this.handleClick.bind(_this);
 	    return _this;
 	  }
 	
-	  Mask.prototype.getAnimation = function getAnimation() {
-	    return this.state.visible ? [[{ style: { rotate: 90 }, duration: 0 }, {
+	  Mask.prototype.getAnimation = function getAnimation(visible) {
+	    return visible ? [[{ style: { rotate: 90 }, duration: 0 }, {
 	      d: 'M20 15L20 45L45 30Z', style: { rotate: 0 },
 	      delay: 150, duration: 300, ease: 'easeOutQuint'
 	    }], [{ style: { rotate: 90 }, duration: 0 }, {
@@ -19874,33 +19880,15 @@ webpackJsonp([0,1],[
 	  };
 	
 	  Mask.prototype.getIconChildren = function getIconChildren() {
-	    return this.state.visible ? [_react2.default.createElement('path', {
-	      d: 'M20 15L20 45L45 30Z',
-	      fill: '#999',
-	      key: 'a0',
-	      style: { transformOrigin: '30px 30px' }
-	    }), _react2.default.createElement('path', {
-	      d: 'M20 15L20 45L45 30Z',
-	      fill: '#999',
-	      key: 'a1',
-	      style: { transformOrigin: '30px 30px' }
-	    })] : [_react2.default.createElement('path', {
-	      d: 'M15 18L15 27L45 27L45 18Z',
-	      fill: '#999',
-	      key: 'b0',
-	      style: { transformOrigin: '30px 30px' }
-	    }), _react2.default.createElement('path', {
-	      d: 'M15 33L15 42L45 42L45 33Z',
-	      fill: '#999',
-	      key: 'b1',
-	      style: { transformOrigin: '30px 30px' }
-	    })];
+	    return this.state.visible ? ['M20 15L20 45L45 30Z', 'M20 15L20 45L45 30Z'] : ['M15 18L15 27L45 27L45 18Z', 'M15 33L15 42L45 42L45 33Z'];
 	  };
 	
 	  Mask.prototype.handleClick = function handleClick() {
 	    var visible = this.state.visible;
+	    var animation = this.getAnimation(!visible);
 	    this.setState({
-	      visible: !visible
+	      visible: !visible,
+	      animation: animation
 	    });
 	
 	    // If mask is visible now, the video is going to play. Otherwise...
@@ -19913,21 +19901,31 @@ webpackJsonp([0,1],[
 	      opacity: this.state.visible ? 1 : 0,
 	      transition: this.state.visible ? 'opacity 0.3s cubic-bezier(0.215, 0.61, 0.355, 1)' : 'opacity 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s'
 	    });
-	    var children = this.getIconChildren();
-	    var animation = this.getAnimation();
 	    return _react2.default.createElement(
 	      'section',
 	      { style: style, onClick: this.handleClick },
 	      _react2.default.createElement(
-	        _IconSVGAnim2.default,
-	        { style: buttonStyle,
+	        'svg',
+	        {
+	          version: '1.2',
+	          xmlns: 'http://www.w3.org/2000/svg',
 	          viewBox: '0 0 60 60',
 	          width: '60',
 	          height: '60',
-	          appear: false,
-	          animation: animation
+	          style: buttonStyle
 	        },
-	        children
+	        _react2.default.createElement(_rcTweenOne2.default, { d: this.childrenToRender[0], fill: '#999',
+	          style: { transformOrigin: '30px 30px' },
+	          animation: this.state.animation[0],
+	          component: 'path',
+	          attr: 'attr'
+	        }),
+	        _react2.default.createElement(_rcTweenOne2.default, { d: this.childrenToRender[1], fill: '#999',
+	          style: { transformOrigin: '30px 30px' },
+	          animation: this.state.animation[1],
+	          component: 'path',
+	          attr: 'attr'
+	        })
 	      )
 	    );
 	  };
@@ -19950,315 +19948,12 @@ webpackJsonp([0,1],[
 
 	'use strict';
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _react = __webpack_require__(2);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _rcTweenOne = __webpack_require__(164);
-	
-	var _rcTweenOne2 = _interopRequireDefault(_rcTweenOne);
-	
-	var _SvgMorphPlugin = __webpack_require__(177);
-	
-	var _SvgMorphPlugin2 = _interopRequireDefault(_SvgMorphPlugin);
-	
-	var _SvgDrawPlugin = __webpack_require__(179);
-	
-	var _SvgDrawPlugin2 = _interopRequireDefault(_SvgDrawPlugin);
-	
-	var _svg = __webpack_require__(180);
-	
-	var _svg2 = _interopRequireDefault(_svg);
-	
-	var _animTypeSVG = __webpack_require__(181);
-	
-	var _animTypeSVG2 = _interopRequireDefault(_animTypeSVG);
-	
-	var _util = __webpack_require__(182);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-	
-	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
-	
-	_rcTweenOne2["default"].plugins.push(_SvgMorphPlugin2["default"]);
-	_rcTweenOne2["default"].plugins.push(_SvgDrawPlugin2["default"]);
-	
-	var IconSVGAnim = function (_Component) {
-	  _inherits(IconSVGAnim, _Component);
-	
-	  function IconSVGAnim() {
-	    _classCallCheck(this, IconSVGAnim);
-	
-	    var _this = _possibleConstructorReturn(this, _Component.apply(this, arguments));
-	
-	    ['getStartChildren', 'changeProps'].forEach(function (method) {
-	      return _this[method] = _this[method].bind(_this);
-	    });
-	    var children = _this.getStartChildren(_this.props);
-	    _this.state = {
-	      children: children
-	    };
-	    return _this;
-	  }
-	
-	  IconSVGAnim.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-	    if (nextProps.type !== this.props.type) {
-	      var type = this.props.type + 'to' + nextProps.type;
-	      this.changeProps(nextProps, _svg2["default"][nextProps.type], type);
-	      return;
-	    }
-	    var currentChildren = (0, _util.toArrayChildren)(this.props.children);
-	    var newChildren = (0, _util.toArrayChildren)(nextProps.children);
-	    var childrenDiffer = currentChildren.length !== newChildren.length;
-	    if (!childrenDiffer) {
-	      (0, _util.toArrayChildren)(currentChildren).forEach(function (item, i) {
-	        var newItem = newChildren[i];
-	        if (item.key !== newItem.key) {
-	          childrenDiffer = true;
-	        }
-	      });
-	    }
-	    if (childrenDiffer) {
-	      this.changeProps(nextProps, newChildren);
-	    }
-	  };
-	
-	  IconSVGAnim.prototype.getStartChildren = function getStartChildren(props) {
-	    var _this2 = this;
-	
-	    var svg = props.children || _svg2["default"][props.type];
-	    return (0, _util.toArrayChildren)(svg).map(function (item, i) {
-	      if (_this2.props.appear) {
-	        var animation = _animTypeSVG2["default"].scale;
-	        if (props.animation && props.animation[i]) {
-	          animation = props.animation[i];
-	        } else if (!_animTypeSVG2["default"][props.type]) {
-	          animation = _extends({}, animation, { delay: i * 100 });
-	        }
-	        return _react2["default"].createElement(_rcTweenOne2["default"], _extends({}, _this2.allToPath(item), {
-	          animation: animation,
-	          component: 'path',
-	          key: item.key || i,
-	          attr: 'attr'
-	        }));
-	      }
-	      return _react2["default"].cloneElement(item, { key: item.key || i });
-	    });
-	  };
-	
-	  IconSVGAnim.prototype.allToPath = function allToPath(item) {
-	    var props = _extends({}, item.props);
-	    if (typeof item.type !== 'string') {
-	      throw new Error('svg tag error.');
-	    }
-	    var name = item.type.toUpperCase();
-	    var cx = void 0;
-	    var cy = void 0;
-	    var rx = void 0;
-	    var ry = void 0;
-	    switch (name) {
-	      case 'CIRCLE':
-	        {
-	          cx = parseFloat(props.cx);
-	          cy = parseFloat(props.cy);
-	          var r = parseFloat(props.r);
-	          delete props.cx;
-	          delete props.cy;
-	          delete props.r;
-	          return _extends({}, props, {
-	            d: 'M' + (cx - r) + ',' + cy + ' a' + r + ',' + r + ' 0 1,0 ' + r * 2 + ',0a' + r + ',' + r + ' 0 1,0 ' + -r * 2 + ',0z'
-	          });
-	        }
-	      case 'ELLIPSE':
-	        {
-	          cx = parseFloat(props.cx);
-	          cy = parseFloat(props.cy);
-	          rx = parseFloat(props.rx);
-	          ry = parseFloat(props.ry);
-	          delete props.cx;
-	          delete props.cy;
-	          delete props.rx;
-	          delete props.ry;
-	          return _extends({}, props, {
-	            d: 'M' + (cx - rx) + ',' + cy + 'a' + rx + ',' + ry + ' 0 1,0 ' + rx * 2 + ',0a' + rx + ',' + ry + ' 0 1,0 ' + -rx * 2 + ',0z'
-	          });
-	        }
-	      case 'RECT':
-	        {
-	          var x = parseFloat(props.x);
-	          var y = parseFloat(props.y);
-	          var w = parseFloat(props.width);
-	          var h = parseFloat(props.height);
-	          rx = parseFloat(props.rx);
-	          ry = parseFloat(props.ry);
-	          delete props.x;
-	          delete props.y;
-	          delete props.width;
-	          delete props.height;
-	          delete props.rx;
-	          delete props.ry;
-	          if (!rx && !ry) {
-	            return { d: 'M' + x + ',' + y + 'l' + w + ',0l0,' + h + 'l' + -w + ',0z' };
-	          }
-	          return _extends({}, props, {
-	            d: 'M' + (x + rx) + ',' + y + '\nl' + (w - rx * 2) + ',0\na' + rx + ',' + ry + ' 0 0,1 ' + rx + ',' + ry + '\nl0,' + (h - ry * 2) + '\na' + rx + ',' + ry + ' 0 0,1 ' + -rx + ',' + ry + '\nl' + (rx * 2 - w) + ',0\na' + rx + ',' + ry + ' 0 0,1 ' + -rx + ',' + -ry + '\nl0,' + (ry * 2 - h) + '\na' + rx + ',' + ry + ' 0 0,1 ' + rx + ',' + -ry + 'z'
-	          });
-	        }
-	      case 'POLYGON':
-	        {
-	          var points = parseFloat(props.points);
-	          delete props.points;
-	          var p = points.split(/\s+/);
-	          var path = '';
-	          for (var i = 0; i < p.length; i++) {
-	            path += (i && 'L' || 'M') + p[i];
-	          }
-	          return _extends({}, props, { d: path + 'z' });
-	        }
-	      case 'LINE':
-	        {
-	          var x1 = parseFloat(props.x1);
-	          var x2 = parseFloat(props.x2);
-	          var y1 = parseFloat(props.y1);
-	          var y2 = parseFloat(props.y2);
-	          delete props.x1;
-	          delete props.x2;
-	          delete props.y1;
-	          delete props.y2;
-	          return _extends({}, props, { d: 'M' + x1 + ',' + y1 + 'L' + x2 + ',' + y2 + 'z' });
-	        }
-	      default:
-	        {
-	          return _extends({}, props);
-	        }
-	    }
-	  };
-	
-	  IconSVGAnim.prototype.tweenEndRemove = function tweenEndRemove(key) {
-	    var children = this.state.children.map(function (item) {
-	      if (!item) {
-	        return null;
-	      }
-	      if (parseFloat(item.key) !== key) {
-	        return item;
-	      }
-	      return null;
-	    }).filter(function (item) {
-	      return item;
-	    });
-	    this.setState({
-	      children: children
-	    });
-	  };
-	
-	  IconSVGAnim.prototype.changeProps = function changeProps(nextProps, newChild, type) {
-	    var _this3 = this;
-	
-	    var currentChildren = this.state.children;
-	    var newChildren = newChild.map(function (item) {
-	      return _react2["default"].createElement('path', _extends({}, _this3.allToPath(item)));
-	    });
-	    var children = [];
-	    currentChildren.forEach(function (item, i) {
-	      var d = item.props.animation ? item.props.animation.d || item.props.d : item.props.d;
-	      var itemProps = _extends({}, item.props);
-	      var toChildren = newChildren[i];
-	      var toChildrenProps = _extends({}, toChildren ? toChildren.props : {});
-	      var animation = {
-	        style: { scale: 0, opacity: 0 }
-	      };
-	      if (nextProps.animation && nextProps.animation[i]) {
-	        animation = nextProps.animation[i];
-	      } else if (_animTypeSVG2["default"][type]) {
-	        animation = _animTypeSVG2["default"][type][i];
-	      } else if (toChildren) {
-	        animation = {
-	          d: toChildrenProps.d
-	        };
-	      }
-	      if (!toChildren) {
-	        animation.onComplete = _this3.tweenEndRemove.bind(_this3, i);
-	      }
-	      children.push(_react2["default"].createElement(_rcTweenOne2["default"], _extends({}, toChildren ? {} : itemProps, toChildrenProps, {
-	        component: 'path', attr: 'attr', animation: animation, d: d, key: i
-	      })));
-	    });
-	    // 多出的再行插入
-	    if (newChildren.length > currentChildren.length) {
-	      newChildren.forEach(function (item, i) {
-	        if (i >= currentChildren.length) {
-	          var _a = _extends({}, _animTypeSVG2["default"].scale);
-	          if (nextProps.animation && nextProps.animation[i]) {
-	            _a = nextProps.animation[i];
-	          } else if (_animTypeSVG2["default"][type]) {
-	            _a = _animTypeSVG2["default"][type][i];
-	          } else {
-	            _a.delay = (i - currentChildren.length) * 100 + 100;
-	          }
-	          children.push(_react2["default"].createElement(_rcTweenOne2["default"], _extends({}, item.props, { animation: _a, key: i, attr: 'attr', component: 'path' })));
-	        }
-	      });
-	    }
-	    this.setState({ children: children });
-	  };
-	
-	  IconSVGAnim.prototype.render = function render() {
-	    return _react2["default"].createElement(
-	      'svg',
-	      _extends({
-	        version: '1.2',
-	        xmlns: 'http://www.w3.org/2000/svg'
-	      }, this.props),
-	      this.state.children
-	    );
-	  };
-	
-	  return IconSVGAnim;
-	}(_react.Component);
-	
-	IconSVGAnim.propTypes = {
-	  children: _react.PropTypes.any,
-	  viewBox: _react.PropTypes.string,
-	  type: _react.PropTypes.any,
-	  animType: _react.PropTypes.string,
-	  appear: _react.PropTypes.bool,
-	  animation: _react.PropTypes.array
-	};
-	
-	IconSVGAnim.defaultProps = {
-	  appear: true,
-	  viewBox: '0 0 1024 1024',
-	  width: 100,
-	  height: 100
-	};
-	
-	exports["default"] = IconSVGAnim;
-	module.exports = exports['default'];
-
-/***/ },
-/* 164 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var TweenOne = __webpack_require__(165);
-	TweenOne.TweenOneGroup = __webpack_require__(176);
+	var TweenOne = __webpack_require__(164);
+	TweenOne.TweenOneGroup = __webpack_require__(175);
 	module.exports = TweenOne;
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20275,23 +19970,23 @@ webpackJsonp([0,1],[
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _objectAssign = __webpack_require__(166);
+	var _objectAssign = __webpack_require__(165);
 	
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 	
-	var _util = __webpack_require__(167);
+	var _util = __webpack_require__(166);
 	
-	var _styleUtils = __webpack_require__(168);
+	var _styleUtils = __webpack_require__(167);
 	
-	var _TimeLine = __webpack_require__(169);
+	var _TimeLine = __webpack_require__(168);
 	
 	var _TimeLine2 = _interopRequireDefault(_TimeLine);
 	
-	var _plugins = __webpack_require__(171);
+	var _plugins = __webpack_require__(170);
 	
 	var _plugins2 = _interopRequireDefault(_plugins);
 	
-	var _ticker = __webpack_require__(173);
+	var _ticker = __webpack_require__(172);
 	
 	var _ticker2 = _interopRequireDefault(_ticker);
 	
@@ -20498,7 +20193,7 @@ webpackJsonp([0,1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20587,7 +20282,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 167 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20765,7 +20460,7 @@ webpackJsonp([0,1],[
 	}
 
 /***/ },
-/* 168 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21185,7 +20880,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 169 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21194,23 +20889,23 @@ webpackJsonp([0,1],[
 	  value: true
 	});
 	
-	var _objectAssign = __webpack_require__(166);
+	var _objectAssign = __webpack_require__(165);
 	
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 	
-	var _tweenFunctions = __webpack_require__(170);
+	var _tweenFunctions = __webpack_require__(169);
 	
 	var _tweenFunctions2 = _interopRequireDefault(_tweenFunctions);
 	
-	var _plugins = __webpack_require__(171);
+	var _plugins = __webpack_require__(170);
 	
 	var _plugins2 = _interopRequireDefault(_plugins);
 	
-	var _StylePlugin = __webpack_require__(172);
+	var _StylePlugin = __webpack_require__(171);
 	
 	var _StylePlugin2 = _interopRequireDefault(_StylePlugin);
 	
-	var _styleUtils = __webpack_require__(168);
+	var _styleUtils = __webpack_require__(167);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -21530,7 +21225,7 @@ webpackJsonp([0,1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 170 */
+/* 169 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21785,7 +21480,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 171 */
+/* 170 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21803,7 +21498,7 @@ webpackJsonp([0,1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 172 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21812,15 +21507,15 @@ webpackJsonp([0,1],[
 	  value: true
 	});
 	
-	var _styleUtils = __webpack_require__(168);
+	var _styleUtils = __webpack_require__(167);
 	
 	var _styleUtils2 = _interopRequireDefault(_styleUtils);
 	
-	var _objectAssign = __webpack_require__(166);
+	var _objectAssign = __webpack_require__(165);
 	
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 	
-	var _plugins = __webpack_require__(171);
+	var _plugins = __webpack_require__(170);
 	
 	var _plugins2 = _interopRequireDefault(_plugins);
 	
@@ -22123,7 +21818,7 @@ webpackJsonp([0,1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 173 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22132,7 +21827,7 @@ webpackJsonp([0,1],[
 	  value: true
 	});
 	
-	var _raf = __webpack_require__(174);
+	var _raf = __webpack_require__(173);
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
@@ -22218,10 +21913,10 @@ webpackJsonp([0,1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 174 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(175)
+	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(174)
 	  , root = typeof window === 'undefined' ? global : window
 	  , vendors = ['moz', 'webkit']
 	  , suffix = 'AnimationFrame'
@@ -22297,7 +21992,7 @@ webpackJsonp([0,1],[
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 175 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
@@ -22336,7 +22031,7 @@ webpackJsonp([0,1],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 176 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22351,11 +22046,11 @@ webpackJsonp([0,1],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TweenOne = __webpack_require__(165);
+	var _TweenOne = __webpack_require__(164);
 	
 	var _TweenOne2 = _interopRequireDefault(_TweenOne);
 	
-	var _util = __webpack_require__(167);
+	var _util = __webpack_require__(166);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -22534,7 +22229,7 @@ webpackJsonp([0,1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 177 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22543,7 +22238,7 @@ webpackJsonp([0,1],[
 	  value: true
 	});
 	
-	var _snapsvglite = __webpack_require__(178);
+	var _snapsvglite = __webpack_require__(177);
 	
 	var SvgPlugin = function SvgPlugin(target, vars, key) {
 	  this.target = target;
@@ -22616,7 +22311,7 @@ webpackJsonp([0,1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 178 */
+/* 177 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23088,273 +22783,7 @@ webpackJsonp([0,1],[
 	};
 
 /***/ },
-/* 179 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	/* eslint-disable func-names */
-	var SvgDrawPlugin = function SvgDrawPlugin(target, vars) {
-	  this.target = target;
-	  this.vars = vars;
-	  this.start = {};
-	  this.tagName = this.target.tagName.toLowerCase();
-	};
-	SvgDrawPlugin.prototype = {
-	  name: 'SVGDraw',
-	  setVars: function setVars(vars) {
-	    var _vars = { start: 0 };
-	    if (typeof vars === 'number') {
-	      _vars.end = vars;
-	      return _vars;
-	    }
-	    var data = vars.split(' ');
-	    if (data.length > 1) {
-	      _vars.start = data[0].indexOf('%') >= 0 ? parseFloat(data[0]) / 100 * this.length : parseFloat(data[0]);
-	      _vars.end = data[1].indexOf('%') >= 0 ? parseFloat(data[1]) / 100 * this.length : parseFloat(data[1]);
-	    } else if (parseFloat(vars)) {
-	      _vars.end = vars.indexOf('%') >= 0 ? parseFloat(vars) / 100 * this.length : parseFloat(vars);
-	    } else {
-	      throw new Error('SVGDraw data[' + vars + '] error.');
-	    }
-	    return _vars;
-	  },
-	  getComputedStyle: function getComputedStyle() {
-	    return document.defaultView ? document.defaultView.getComputedStyle(this.target) : {};
-	  },
-	  getLineLength: function getLineLength(x1, y1, x2, y2) {
-	    var _x2 = parseFloat(x2) - parseFloat(x1);
-	    var _y2 = parseFloat(y2) - parseFloat(y1);
-	    return Math.sqrt(_x2 * _x2 + _y2 * _y2);
-	  },
-	  getPolyLength: function getPolyLength(name) {
-	    var _this = this;
-	
-	    // .match(/(?:(-|-=|\+=)?\d*\.?\d*(?:e[\-+]?\d+)?)[0-9]/gi)
-	    var pointsArray = (this.target.getAttribute('points') || '').split(/\s+/).map(function (item) {
-	      return item.split(',').map(function (n) {
-	        return parseFloat(n);
-	      });
-	    });
-	    if (name === 'polygon') {
-	      pointsArray.push(pointsArray[0]);
-	    }
-	    var length = 0;
-	    pointsArray.forEach(function (item, i) {
-	      if (i < pointsArray.length - 1) {
-	        var nextPoint = pointsArray[i + 1];
-	        length += _this.getLineLength(item[0], item[1], nextPoint[0], nextPoint[1]);
-	      }
-	    });
-	    return length;
-	  },
-	  getEllipseLength: function getEllipseLength() {
-	    var rx = parseFloat(this.target.getAttribute('rx'));
-	    var ry = parseFloat(this.target.getAttribute('ry'));
-	    if (!rx || !ry) {
-	      throw new Error('ellipse rx or ry error.');
-	    }
-	    return Math.PI * (3 * (rx + ry) - Math.sqrt((3 * rx + ry) * (3 * ry + rx)));
-	  },
-	  getAnimStart: function getAnimStart() {
-	    // console.log(this.target.getTotalLength(), this.target.getBBox())
-	    var computedStyle = this.getComputedStyle();
-	    switch (this.tagName) {
-	      case 'rect':
-	        this.length = this.target.getAttribute('width') * 2 + this.target.getAttribute('height') * 2;
-	        break;
-	      case 'circle':
-	        this.length = Math.PI * 2 * this.target.getAttribute('r');
-	        break;
-	      case 'line':
-	        this.length = this.getLineLength(this.target.getAttribute('x1'), this.target.getAttribute('y1'), this.target.getAttribute('x2'), this.target.getAttribute('y2'));
-	        break;
-	      case 'polyline':
-	      case 'polygon':
-	        this.length = this.getPolyLength(this.tagName);
-	        break;
-	      case 'ellipse':
-	        this.length = this.getEllipseLength();
-	        break;
-	      default:
-	        this.length = this.target.getTotalLength();
-	        break;
-	    }
-	    this.start.strokeDasharray = computedStyle.strokeDasharray === 'none' ? '100% 100%' : computedStyle.strokeDasharray;
-	    this.start.strokeDashoffset = parseFloat(computedStyle.strokeDashoffset);
-	    this.start.strokeDasharray = this.setVars(this.start.strokeDasharray);
-	    this.vars = this.setVars(this.vars);
-	  },
-	  setRatio: function setRatio(r, t) {
-	    t.style.strokeDasharray = (this.vars.end - this.vars.start - this.start.strokeDasharray.start) * r + this.start.strokeDasharray.start + 'px, ' + this.length + 'px';
-	    t.style.strokeDashoffset = -((this.vars.start + this.start.strokeDashoffset) * r - this.start.strokeDashoffset);
-	  }
-	};
-	exports["default"] = SvgDrawPlugin;
-	module.exports = exports['default'];
-
-/***/ },
-/* 180 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(2);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-	
-	exports["default"] = {
-	  cross: [_react2["default"].createElement("path", { d: "M230,230 L795,795", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M795,230 L230,795", strokeWidth: "87" })],
-	  check: [_react2["default"].createElement("path", { d: "M168,497 L327,777", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M855,245 L327,777", strokeWidth: "87" })],
-	  plus: [_react2["default"].createElement("path", { d: "M160,510L860,510", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M510,160L510,860", strokeWidth: "87" })],
-	  up: [_react2["default"].createElement("path", { d: "M510,300L172,725", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M510,300L852,725", strokeWidth: "87" })],
-	  down: [_react2["default"].createElement("path", { d: "M172,300L510,725", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M852,300L510,725", strokeWidth: "87" })],
-	  left: [_react2["default"].createElement("path", { d: "M300,510L725,172", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M300,510L725,852", strokeWidth: "87" })],
-	  right: [_react2["default"].createElement("path", { d: "M300,172L725,510", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M300,852L725,510", strokeWidth: "87" })],
-	  doubleleft: [_react2["default"].createElement("path", { d: "M136,510 L559,172", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M136,510 L559,852", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M466,510 L889,172", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M466,510 L889,852", strokeWidth: "87" })],
-	  doubleright: [_react2["default"].createElement("path", { d: "M136,172 L559,510", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M136,852 L559,510", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M466,852 L889,510", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M466,172 L889,510", strokeWidth: "87" })],
-	  caretdown: [_react2["default"].createElement("path", { d: "M76.3,392.3l403.1,489.1c16.9,18.9,46.5,18.9,63.4,0 l405.1-489.1c24.4-27.4,5-70.8-31.7-70.8l-808.1,0C71.3,321.5,51.8,364.9,76.3,392.3z"
-	  })],
-	  caretleft: [_react2["default"].createElement("path", { d: "M631.3,76.3L142.1,479.3c-18.9,16.9-18.9,46.5,0,63.4 l489.1,405.1c27.4,24.4,70.8,5,70.8-31.7V107.9C702,71.3,658.6,51.8,631.3,76.3z"
-	  })],
-	  caretright: [_react2["default"].createElement("path", { d: "M392.7,76.3l489.1,403.1c18.9,16.9,18.9,46.5,0,63.4 L392.7,947.7c-27.4,24.4-70.8,5-70.8-31.7V107.9C322,71.3,365.3,51.8,392.7,76.3z"
-	  })],
-	  caretup: [_react2["default"].createElement("path", { d: "M76.3,632.8l405.1-489.1c16.9-18.9,46.5-18.9,63.4,0 l403.1,489.1c24.4,27.4,5,70.8-31.7,70.8H107.9C71.3,703.6,51.8,660.2,76.3,632.8z"
-	  })],
-	  arrowright: [_react2["default"].createElement("path", { d: "M855,510 L558,225", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M855,510 L558,795", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M170,510 L855,510", strokeWidth: "87" })],
-	  arrowleft: [_react2["default"].createElement("path", { d: "M170,510 L465,225", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M170,510 L465,795", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M170,510 L855,510", strokeWidth: "87" })],
-	  arrowup: [_react2["default"].createElement("path", { d: "M515,165 L230,465", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M515,165 L790,465", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M515,850 L515,165", strokeWidth: "87" })],
-	  arrowdown: [_react2["default"].createElement("path", { d: "M515,850 L225,555", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M515,850 L795,555", strokeWidth: "87" }), _react2["default"].createElement("path", { d: "M515,850 L515,165", strokeWidth: "87" })]
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 181 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var a = ['O', 'Moz', 'ms', 'Ms', 'Webkit'];
-	var t = a.filter(function (key) {
-	  return key + 'Transform' in document.body.style;
-	})[0];
-	
-	exports["default"] = {
-	  scale: {
-	    style: {
-	      scale: 0,
-	      opacity: 0
-	    },
-	    type: 'from',
-	    duration: 300,
-	    ease: 'easeOutBack'
-	  },
-	  crosstocheck: [[{ style: { rotate: 90, opacity: 0 }, duration: 250 }, { d: 'M307.5,727.5', duration: 0, style: { rotate: 0, opacity: 1 } }, { d: 'M168.5,497.5 L327.5,777.5', ease: 'easeOutBack', duration: 250 }], { d: 'M856.5,246.5 L327.5,777.5' }],
-	  checktocross: [[{ d: 'M287.5,757.5', duration: 250 }, { d: 'm512,512l0,0z', duration: 0 }, { d: 'M229.5,229.5 L794.5,794.5', duration: 250, ease: 'easeOutBack' }], { d: 'M794.5,229.5 L229.5,794.5' }],
-	  uptodown: [[{ d: 'M510,300L510,725', duration: 200 }, { d: 'M172,300L510,725', ease: 'easeOutBack', duration: 350 }], [{ d: 'M510,300L510,725', duration: 200 }, { d: 'M852,300L510,725', ease: 'easeOutBack', duration: 350 }]],
-	  downtoup: [[{ d: 'M510,300L510,725', duration: 200 }, { d: 'M510,300L172,725', ease: 'easeOutBack', duration: 300 }], [{ d: 'M510,300L510,725', duration: 200 }, { d: 'M510,300L852,725', ease: 'easeOutBack', duration: 300 }]],
-	  lefttoright: [[{ d: 'M300,510L725,510', duration: 200 }, { d: 'M300,852L725,510', ease: 'easeOutBack', duration: 300 }], [{ d: 'M300,510L725,510', duration: 200 }, { d: 'M300,172L725,510', ease: 'easeOutBack', duration: 300 }]],
-	  righttoleft: [[{ d: 'M300,510L725,510', duration: 200 }, { d: 'M300,510L725,852', ease: 'easeOutBack', duration: 300 }], [{ d: 'M300,510L725,510', duration: 200 }, { d: 'M300,510L725,172', ease: 'easeOutBack', duration: 300 }]],
-	  plustocross: [{ d: 'M229.5,229.5L794.5,794.5', ease: 'easeOutBack' }, { d: 'M794.5,229.5L229.5,794.5', ease: 'easeOutBack', delay: 100 }],
-	  crosstoplus: [{ d: 'M160.5,512L863.616699,512', ease: 'easeOutBack' }, { d: 'M509.5,165.5L509.5,859.66', ease: 'easeOutBack', delay: 100 }],
-	  doublelefttodoubleright: [[{ d: 'M136,510L889,510', duration: 200 }, { d: 'M136,172 L559,510', ease: 'easeOutBack', duration: 300 }], [{ d: 'M136,510L889,510', duration: 200 }, { d: 'M136,852 L559,510', ease: 'easeOutBack', duration: 300 }], [{ d: 'M466,510L889,510', duration: 200 }, { d: 'M466,852 L889,510', ease: 'easeOutBack', duration: 300 }], [{ d: 'M466,510L889,510', duration: 200 }, { d: 'M466,172 L889,510', ease: 'easeOutBack', duration: 300 }]],
-	  doublerighttodoubleleft: [[{ d: 'M136,510L889,510', duration: 200 }, { d: 'M136,510 L559,172', ease: 'easeOutBack', duration: 300 }], [{ d: 'M136,510L889,510', duration: 200 }, { d: 'M136,510 L559,852', ease: 'easeOutBack', duration: 300 }], [{ d: 'M466,510L889,510', duration: 200 }, { d: 'M466,510 L889,172', ease: 'easeOutBack', duration: 300 }], [{ d: 'M466,510L889,510', duration: 200 }, { d: 'M466,510 L889,852', ease: 'easeOutBack', duration: 300 }]],
-	  caretdowntocaretup: [[{ style: { rotate: 180, y: t === 'Moz' ? '0%' : '-33%' },
-	    ease: 'easeOutBack', duration: 600
-	  }, {
-	    d: 'M76.3,632.8l405.1-489.1c16.9-18.9,46.5-18.9,63.4,0l403.1,489.1' + 'c24.4,27.4,5,70.8-31.7,70.8H107.9C71.3,703.6,51.8,660.2,76.3,632.8z',
-	    duration: 0,
-	    style: { rotate: 0, y: '0%' }
-	  }]],
-	  caretuptocaretdown: [[{ style: { rotate: 180, y: t === 'Moz' ? '0%' : '33%' },
-	    ease: 'easeOutBack', duration: 600
-	  }, {
-	    d: 'M76.3,392.3l403.1,489.1c16.9,18.9,46.5,18.9,63.4,0l405.1-489.1' + 'c24.4-27.4,5-70.8-31.7-70.8l-808.1,0C71.3,321.5,51.8,364.9,76.3,392.3z',
-	    duration: 0,
-	    style: { rotate: 0, y: '0%' }
-	  }]],
-	  caretlefttocaretright: [[{ style: { rotate: 180, x: t === 'Moz' ? '0%' : '33%' },
-	    ease: 'easeOutBack', duration: 600
-	  }, {
-	    d: 'M392.7,76.3l489.1,403.1c18.9,16.9,18.9,46.5,0,63.4L392.7,947.7' + 'c-27.4,24.4-70.8,5-70.8-31.7V107.9C322,71.3,365.3,51.8,392.7,76.3z',
-	    duration: 0,
-	    style: { rotate: 0, x: '0%' }
-	  }]],
-	  caretrighttocaretleft: [[{ style: { rotate: 180, x: t === 'Moz' ? '0%' : '-33%' },
-	    ease: 'easeOutBack', duration: 600
-	  }, {
-	    d: 'M631.3,76.3L142.1,479.3c-18.9,16.9-18.9,46.5,0,63.4l489.1,405.1' + 'c27.4,24.4,70.8,5,70.8-31.7V107.9C702,71.3,658.6,51.8,631.3,76.3z',
-	    duration: 0,
-	    style: { rotate: 0, x: '0%' }
-	  }]],
-	  arrowrighttoarrowleft: [[{ d: 'M855,510 L558,510', duration: 200 }, { d: 'M170,510 L465,510', duration: 0 }, { d: 'M170,510 L465,225', duration: 300, ease: 'easeOutBack' }], [{ d: 'M855,510 L558,510', duration: 200 }, { d: 'M170,510 L465,510', duration: 0 }, { d: 'M170,510 L465,795', duration: 300, ease: 'easeOutBack' }]],
-	  arrowlefttoarrowright: [[{ d: 'M170,510 L465,510', duration: 200 }, { d: 'M855,510 L558,510', duration: 0 }, { d: 'M855,510 L558,225', duration: 300, ease: 'easeOutBack' }], [{ d: 'M170,510 L465,510', duration: 200 }, { d: 'M855,510 L558,510', duration: 0 }, { d: 'M855,510 L558,795', duration: 300, ease: 'easeOutBack' }]],
-	  arrowuptoarrowdown: [[{ d: 'M515,165 L515,465', duration: 200 }, { d: 'M515,850 L515,555', duration: 0 }, { d: 'M515,850 L225,555', duration: 300, ease: 'easeOutBack' }], [{ d: 'M515,165 L515,465', duration: 200 }, { d: 'M515,850 L515,555', duration: 0 }, { d: 'M515,850 L795,555', duration: 300, ease: 'easeOutBack' }]],
-	  arrowdowntoarrowup: [[{ d: 'M515,850 L515,555', duration: 200 }, { d: 'M515,165 L515,465', duration: 0 }, { d: 'M515,165 L230,465', duration: 300, ease: 'easeOutBack' }], [{ d: 'M515,850 L515,555', duration: 200 }, { d: 'M515,165 L515,465', duration: 0 }, { d: 'M515,165 L790,465', duration: 300, ease: 'easeOutBack' }]]
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 182 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.toArrayChildren = toArrayChildren;
-	exports.dataToArray = dataToArray;
-	exports.transformArguments = transformArguments;
-	
-	var _react = __webpack_require__(2);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-	
-	function toArrayChildren(children) {
-	  var ret = [];
-	  _react2["default"].Children.forEach(children, function (c) {
-	    ret.push(c);
-	  });
-	  return ret;
-	}
-	
-	function dataToArray(vars) {
-	  if (!vars && vars !== 0) {
-	    return [];
-	  }
-	  if (Array.isArray(vars)) {
-	    return vars;
-	  }
-	  return [vars];
-	}
-	
-	function transformArguments(arg, key) {
-	  var result = arg;
-	  if (typeof arg === 'function') {
-	    result = arg({
-	      key: key
-	    });
-	  }
-	  return result;
-	}
-
-/***/ },
-/* 183 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
