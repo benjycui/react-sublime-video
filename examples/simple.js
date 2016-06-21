@@ -19808,6 +19808,10 @@ webpackJsonp([0,1],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _IconSVGAnim = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"rc-icon-anim/lib/IconSVGAnim\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _IconSVGAnim2 = _interopRequireDefault(_IconSVGAnim);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -19825,55 +19829,16 @@ webpackJsonp([0,1],[
 	  width: '100%',
 	  height: '100%',
 	  backgroundColor: 'rgba(0, 0, 0, 0.35)',
-	  cursor: 'pointer',
-	  transition: 'opacity 0.3s ease'
+	  cursor: 'pointer'
 	};
 	
 	var buttonStyle = {
 	  position: 'absolute',
 	  top: '50%',
 	  left: '50%',
-	  width: 60,
-	  height: 60,
 	  margin: -30,
 	  borderRadius: 30,
 	  backgroundColor: '#fff'
-	};
-	
-	var commonBarStyle = {
-	  position: 'absolute',
-	  width: 0,
-	  height: 0,
-	  borderStyle: 'solid',
-	  transition: 'all 0.4s cubic-bezier(0, 0, 0.1, 1)'
-	};
-	
-	var startButton = {
-	  leftBar: {
-	    left: 21,
-	    top: 15,
-	    borderWidth: '15px 0 0 25px',
-	    borderColor: 'transparent transparent transparent #999'
-	  },
-	  rightBar: {
-	    left: 21,
-	    top: 30,
-	    borderWidth: '15px 25px 0 0',
-	    borderColor: '#999 transparent transparent transparent'
-	  }
-	};
-	
-	var pauseButton = {
-	  leftBar: {
-	    left: 20,
-	    top: 15,
-	    height: 30
-	  },
-	  rightBar: {
-	    left: 36,
-	    top: 15,
-	    height: 30
-	  }
 	};
 	
 	var Mask = function (_React$Component) {
@@ -19892,6 +19857,46 @@ webpackJsonp([0,1],[
 	    return _this;
 	  }
 	
+	  Mask.prototype.getAnimation = function getAnimation() {
+	    return this.state.visible ? [[{ style: { rotate: 90 }, duration: 0 }, {
+	      d: 'M20 15L20 45L45 30Z', style: { rotate: 0 },
+	      delay: 150, duration: 300, ease: 'easeOutQuint'
+	    }], [{ style: { rotate: 90 }, duration: 0 }, {
+	      d: 'M20 15L20 45L45 30Z', style: { rotate: 0 },
+	      delay: 150, duration: 300, ease: 'easeOutQuint'
+	    }]] : [[{ style: { rotate: 0 }, duration: 0 }, {
+	      d: 'M15 18L15 27L45 27L45 18Z', style: { rotate: 90 },
+	      duration: 300, ease: 'easeOutQuint'
+	    }], [{ style: { rotate: 0 }, duration: 0 }, {
+	      d: 'M15 33L15 42L45 42L45 33Z', style: { rotate: 90 },
+	      duration: 300, ease: 'easeOutQuint'
+	    }]];
+	  };
+	
+	  Mask.prototype.getIconChildren = function getIconChildren() {
+	    return this.state.visible ? [_react2.default.createElement('path', {
+	      d: 'M20 15L20 45L45 30Z',
+	      fill: '#999',
+	      key: 'a0',
+	      style: { transformOrigin: '30px 30px' }
+	    }), _react2.default.createElement('path', {
+	      d: 'M20 15L20 45L45 30Z',
+	      fill: '#999',
+	      key: 'a1',
+	      style: { transformOrigin: '30px 30px' }
+	    })] : [_react2.default.createElement('path', {
+	      d: 'M15 18L15 27L45 27L45 18Z',
+	      fill: '#999',
+	      key: 'b0',
+	      style: { transformOrigin: '30px 30px' }
+	    }), _react2.default.createElement('path', {
+	      d: 'M15 33L15 42L45 42L45 33Z',
+	      fill: '#999',
+	      key: 'b1',
+	      style: { transformOrigin: '30px 30px' }
+	    })];
+	  };
+	
 	  Mask.prototype.handleClick = function handleClick() {
 	    var visible = this.state.visible;
 	    this.setState({
@@ -19903,29 +19908,26 @@ webpackJsonp([0,1],[
 	    this.props.onClick(shouldPlay);
 	  };
 	
-	  Mask.prototype.getLeftBarStyle = function getLeftBarStyle() {
-	    var style = this.state.visible ? startButton.leftBar : pauseButton.leftBar;
-	    return _extends({}, commonBarStyle, style);
-	  };
-	
-	  Mask.prototype.getRightBarStyle = function getRightBarStyle() {
-	    var style = this.state.visible ? startButton.rightBar : pauseButton.rightBar;
-	    return _extends({}, commonBarStyle, style);
-	  };
-	
 	  Mask.prototype.render = function render() {
 	    var style = _extends({}, maskStyle, {
-	      opacity: this.state.visible ? 1 : 0
+	      opacity: this.state.visible ? 1 : 0,
+	      transition: this.state.visible ? 'opacity 0.3s cubic-bezier(0.215, 0.61, 0.355, 1)' : 'opacity 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s'
 	    });
-	
+	    var children = this.getIconChildren();
+	    var animation = this.getAnimation();
 	    return _react2.default.createElement(
 	      'section',
 	      { style: style, onClick: this.handleClick },
 	      _react2.default.createElement(
-	        'div',
-	        { style: buttonStyle },
-	        _react2.default.createElement('div', { style: this.getLeftBarStyle(), ref: 'leftBar' }),
-	        _react2.default.createElement('div', { style: this.getRightBarStyle(), ref: 'rightBar' })
+	        _IconSVGAnim2.default,
+	        { style: buttonStyle,
+	          viewBox: '0 0 60 60',
+	          width: '60',
+	          height: '60',
+	          appear: false,
+	          animation: animation
+	        },
+	        children
 	      )
 	    );
 	  };
