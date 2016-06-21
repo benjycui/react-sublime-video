@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
-import IconSVGAnim from 'rc-icon-anim/lib/IconSVGAnim';
-
+import TweenOne from 'rc-tween-one';
+import SvgMorphPlugin from 'rc-tween-one/lib/plugin/SvgMorphPlugin';
+TweenOne.plugins.push(SvgMorphPlugin);
 const maskStyle = {
   position: 'absolute',
   top: 0,
@@ -27,13 +28,14 @@ export default class Mask extends React.Component {
 
     this.state = {
       visible: props.defaultVisible,
+      animation: [],
     };
-
+    this.childrenToRender = this.getIconChildren();
     this.handleClick = this.handleClick.bind(this);
   }
 
-  getAnimation() {
-    return this.state.visible ?
+  getAnimation(visible) {
+    return visible ?
       [
         [
           { style: { rotate: 90 }, duration: 0 },
@@ -70,34 +72,16 @@ export default class Mask extends React.Component {
 
   getIconChildren() {
     return this.state.visible ?
-      [<path
-        d="M20 15L20 45L45 30Z"
-        fill="#999"
-        key="a0"
-        style={{ transformOrigin: '30px 30px' }}
-      />, <path
-        d="M20 15L20 45L45 30Z"
-        fill="#999"
-        key="a1"
-        style={{ transformOrigin: '30px 30px' }}
-      />] :
-      [<path
-        d="M15 18L15 27L45 27L45 18Z"
-        fill="#999"
-        key="b0"
-        style={{ transformOrigin: '30px 30px' }}
-      />, <path
-        d="M15 33L15 42L45 42L45 33Z"
-        fill="#999"
-        key="b1"
-        style={{ transformOrigin: '30px 30px' }}
-      />];
+      ['M20 15L20 45L45 30Z', 'M20 15L20 45L45 30Z'] :
+      ['M15 18L15 27L45 27L45 18Z', 'M15 33L15 42L45 42L45 33Z'];
   }
 
   handleClick() {
     const visible = this.state.visible;
+    const animation = this.getAnimation(!visible);
     this.setState({
       visible: !visible,
+      animation,
     });
 
     // If mask is visible now, the video is going to play. Otherwise...
@@ -113,19 +97,29 @@ export default class Mask extends React.Component {
         'opacity 0.3s cubic-bezier(0.215, 0.61, 0.355, 1)' :
         'opacity 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s',
     };
-    const children = this.getIconChildren();
-    const animation = this.getAnimation();
     return (
       <section style={style} onClick={this.handleClick}>
-        <IconSVGAnim style={buttonStyle}
+        <svg
+          version="1.2"
+          xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 60 60"
           width="60"
           height="60"
-          appear={false}
-          animation={animation}
+          style={buttonStyle}
         >
-          {children}
-        </IconSVGAnim>
+          <TweenOne d={this.childrenToRender[0]} fill="#999"
+            style={{ transformOrigin: '30px 30px' }}
+            animation={this.state.animation[0]}
+            component="path"
+            attr="attr"
+          />
+          <TweenOne d={this.childrenToRender[1]} fill="#999"
+            style={{ transformOrigin: '30px 30px' }}
+            animation={this.state.animation[1]}
+            component="path"
+            attr="attr"
+          />
+        </svg>
       </section>
     );
   }
