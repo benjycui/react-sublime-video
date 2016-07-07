@@ -1,6 +1,6 @@
 {
   "name": "react-sublime-video",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A sublime video player in React.",
   "main": "./lib/index.js",
   "scripts": {
