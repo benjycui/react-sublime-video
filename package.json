@@ -3,6 +3,9 @@
   "version": "0.2.4",
   "description": "A sublime video player in React.",
   "main": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "start": "rc-tools run server",
     "lint": "rc-tools run lint",
