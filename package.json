@@ -33,7 +33,8 @@
   },
   "homepage": "https://github.com/benjycui/react-sublime-video#readme",
   "dependencies": {
-    "rc-tween-one": "^0.6.19"
+    "prop-types": "^15.5.10",
+    "rc-tween-one": "^1.2.5"
   },
   "devDependencies": {
     "rc-tools": "^5.5.11",
